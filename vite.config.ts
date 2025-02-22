@@ -9,7 +9,9 @@ import IconsResolve from 'unplugin-icons/resolver'
 export default defineConfig({
   plugins: [
     vue(),
-    webExtension(),
+    webExtension({
+      additionalInputs: ['new.html']
+    }),
     Components({
       resolvers: [IconsResolve()],
       dts: true
