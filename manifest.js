@@ -17,7 +17,7 @@ const manifestConfig = {
     service_worker: 'src/service_workers/index.ts'
   },
   options_page: 'options.html',
-  permissions: ['storage', 'unlimitedStorage', 'declarativeNetRequest', 'alarms'],
+  permissions: ['storage', 'unlimitedStorage', 'declarativeNetRequest', 'alarms', 'notifications'],
   host_permissions: ['<all_urls>']
 }
 

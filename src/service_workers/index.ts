@@ -11,3 +11,10 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.alarms.create({ periodInMinutes: 0.5, when: Date.now() })
 
 BackgroundListener.create().start()
+
+chrome.notifications.create({
+  type: 'basic',
+  iconUrl: chrome.runtime.getURL('favicon.png'),
+  title: 'Pomodoro Timer',
+  message: 'Pomodoro Timer is running'
+})
