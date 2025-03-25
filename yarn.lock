@@ -365,7 +365,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify/types@npm:^2.0.0":
+"@iconify-json/ic@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@iconify-json/ic@npm:1.2.2"
+  dependencies:
+    "@iconify/types": "npm:*"
+  checksum: 10c0/2c31ecded4d03300468d69fd15dac391242dcce80c6468313ec6a25e032e7e9996573bba683fe84524d6b52aa0e6e0a67dcbaabd7f8a1ec04a031d4ebefa2811
+  languageName: node
+  linkType: hard
+
+"@iconify/types@npm:*, @iconify/types@npm:^2.0.0":
   version: 2.0.0
   resolution: "@iconify/types@npm:2.0.0"
   checksum: 10c0/65a3be43500c7ccacf360e136d00e1717f050b7b91da644e94370256ac66f582d59212bdb30d00788aab4fc078262e91c95b805d1808d654b72f6d2072a7e4b2
@@ -5367,6 +5376,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "task-concentrator@workspace:."
   dependencies:
+    "@iconify-json/ic": "npm:^1.2.2"
     "@playwright/test": "npm:^1.48.0"
     "@popperjs/core": "npm:^2.11.8"
     "@rushstack/eslint-patch": "npm:^1.8.0"

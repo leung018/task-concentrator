@@ -18,6 +18,8 @@ import { MultipleActionService } from '../infra/multiple_actions'
 import { ChromeNotificationService } from '../chrome/notification'
 import { TimerStateStorageService } from '../domain/pomodoro/storage'
 import { ChromeCloseTabsService } from '../chrome/close_tabs'
+import { getSoundConfig } from '../config/sound_config'
+import { SoundService } from '../chrome/sound'
 
 export class BackgroundListener {
   private redirectTogglingService: BrowsingControlTogglingService
@@ -29,9 +31,11 @@ export class BackgroundListener {
   private closeTabsService: ActionService
 
   static create() {
+    const soundConfig = getSoundConfig()
     const reminderService = new MultipleActionService([
       new ChromeNewTabService(config.getReminderPageUrl()),
-      new ChromeNotificationService()
+      new ChromeNotificationService(),
+      new SoundService(soundConfig.soundFile)
     ])
 
     return new BackgroundListener({

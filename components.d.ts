@@ -18,6 +18,7 @@ declare module 'vue' {
     BNavItem: typeof import('bootstrap-vue-next/components/BNav')['BNavItem']
     BRow: typeof import('bootstrap-vue-next/components/BContainer')['BRow']
     IIcBaselineSettings: typeof import('~icons/ic/baseline-settings')['default']
+    SoundOptions: typeof import('./src/components/SoundOptions.vue')['default']
   }
   export interface ComponentCustomProperties {
     vBToggle: typeof import('bootstrap-vue-next/directives/BToggle')['vBToggle']

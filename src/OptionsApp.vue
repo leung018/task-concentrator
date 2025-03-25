@@ -9,6 +9,7 @@ import { ChromeCommunicationManager } from './chrome/communication'
 import { DailyResetTimeStorageService } from './domain/daily_reset_time/storage'
 import { ReloadService } from './chrome/reload'
 import { PomodoroRecordStorageService } from './domain/pomodoro/record/storage'
+import SoundOptions from './components/SoundOptions.vue'
 
 const port = new ChromeCommunicationManager().clientConnect()
 
@@ -75,7 +76,8 @@ const currentView = computed(() => {
 </script>
 
 <template>
-  <main>
+  <div class="options-container">
+    <h1>Task Concentrator Options</h1>
     <BNav tabs class="mt-2 ms-2" align="center">
       <BNavItem
         v-for="path in Object.values(PATH)"
@@ -87,5 +89,6 @@ const currentView = computed(() => {
       </BNavItem>
     </BNav>
     <component :is="currentView.component" v-bind="currentView.props" />
-  </main>
+    <SoundOptions />
+  </div>
 </template>
