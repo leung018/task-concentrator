@@ -1,17 +1,36 @@
 <script setup lang="ts">
-import config from '../config'
+import { PomodoroTimerConfig } from '../domain/pomodoro/config'
 import { PomodoroTimerConfigStorageService } from '../domain/pomodoro/config/storage'
 import { defineProps, onBeforeMount, ref } from 'vue'
+import { Duration } from '../domain/pomodoro/duration'
 
 const { timerConfigStorageService } = defineProps<{
   timerConfigStorageService: PomodoroTimerConfigStorageService
 }>()
 
-const timerConfig = ref(config.getDefaultPomodoroTimerConfig())
+const focusDurationSeconds = ref(0)
+const shortBreakDurationSeconds = ref(0)
+const longBreakDurationSeconds = ref(0)
+const numOfPomodoriPerCycle = ref(0)
 
 onBeforeMount(async () => {
-  timerConfig.value = await timerConfigStorageService.get()
+  const timerConfig = await timerConfigStorageService.get()
+
+  focusDurationSeconds.value = timerConfig.focusDuration.remainingSeconds()
+  shortBreakDurationSeconds.value = timerConfig.shortBreakDuration.remainingSeconds()
+  longBreakDurationSeconds.value = timerConfig.longBreakDuration.remainingSeconds()
+  numOfPomodoriPerCycle.value = timerConfig.numOfPomodoriPerCycle
 })
+
+const onClickSave = async () => {
+  const timerConfig = new PomodoroTimerConfig({
+    focusDuration: new Duration({ seconds: focusDurationSeconds.value }),
+    shortBreakDuration: new Duration({ seconds: shortBreakDurationSeconds.value }),
+    longBreakDuration: new Duration({ seconds: longBreakDurationSeconds.value }),
+    numOfPomodoriPerCycle: numOfPomodoriPerCycle.value
+  })
+  await timerConfigStorageService.save(timerConfig)
+}
 </script>
 
 <template>
@@ -26,7 +45,7 @@ onBeforeMount(async () => {
           type="number"
           min="1"
           data-test="focus-duration"
-          :value="timerConfig.focusDuration.remainingSeconds()"
+          v-model.number="focusDurationSeconds"
         ></b-form-input>
       </b-form-group>
       <b-form-group label="Short Break Duration (seconds)">
@@ -34,7 +53,7 @@ onBeforeMount(async () => {
           type="number"
           min="1"
           data-test="short-break-duration"
-          :value="timerConfig.shortBreakDuration.remainingSeconds()"
+          v-model.number="shortBreakDurationSeconds"
         ></b-form-input>
       </b-form-group>
       <b-form-group label="Long Break Duration (seconds)">
@@ -42,7 +61,7 @@ onBeforeMount(async () => {
           type="number"
           min="1"
           data-test="long-break-duration"
-          :value="timerConfig.longBreakDuration.remainingSeconds()"
+          v-model.number="longBreakDurationSeconds"
         ></b-form-input>
       </b-form-group>
       <b-form-group label="Number of Pomodori Per Cycle">
@@ -50,14 +69,19 @@ onBeforeMount(async () => {
           type="number"
           min="1"
           data-test="num-of-pomodori-per-cycle"
-          :value="timerConfig.numOfPomodoriPerCycle"
+          v-model.number="numOfPomodoriPerCycle"
         ></b-form-input>
       </b-form-group>
       <div class="mt-4">
-        <b-button variant="danger" type="button" class="me-2" data-test="save-button"
-          >Save</b-button
+        <b-button
+          variant="danger"
+          type="button"
+          class="me-2"
+          data-test="save-button"
+          @click="onClickSave"
         >
-        <b-button variant="success" type="button">Reset to Default</b-button>
+          Save
+        </b-button>
       </div>
     </form>
   </div>

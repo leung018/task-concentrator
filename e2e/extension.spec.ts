@@ -208,6 +208,23 @@ test('should able to save daily reset time', async ({ page, extensionId }) => {
   await expect(page.getByTestId('time-input')).toHaveValue('10:30')
 })
 
+test('should able to change pomodoro timer config', async ({ page, extensionId }) => {
+  await goToTestingConfigPage(page, extensionId)
+
+  await page.getByTestId('focus-duration').fill('10')
+  await page.getByTestId('short-break-duration').fill('2')
+  await page.getByTestId('long-break-duration').fill('4')
+  await page.getByTestId('num-of-pomodori-per-cycle').fill('3')
+
+  await page.getByTestId('save-button').click()
+  await page.reload()
+
+  await expect(page.getByTestId('focus-duration')).toHaveValue('10')
+  await expect(page.getByTestId('short-break-duration')).toHaveValue('2')
+  await expect(page.getByTestId('long-break-duration')).toHaveValue('4')
+  await expect(page.getByTestId('num-of-pomodori-per-cycle')).toHaveValue('3')
+})
+
 async function addBlockedDomain(page: Page, domain: string) {
   const input = page.getByTestId('blocked-domain-input')
   const addButton = page.getByTestId('add-button')
@@ -309,6 +326,10 @@ async function goToReminderPage(page: Page, extensionId: string) {
 
 async function goToStatisticsPage(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html#/statistics`)
+}
+
+async function goToTestingConfigPage(page: Page, extensionId: string) {
+  await page.goto(`chrome-extension://${extensionId}/testing-config.html`)
 }
 
 // TODO: copy from src/util.ts and find way to share the code between e2e and src, so that we can avoid duplication

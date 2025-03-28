@@ -2,6 +2,7 @@ import type { PomodoroTimerConfig } from '.'
 import { ChromeStorageFactory } from '../../../chrome/storage'
 import config from '../../../config'
 import { FakeStorage, type Storage } from '../../../infra/storage'
+import { deserializePomodoroTimerConfig, serializePomodoroTimerConfig } from './serialize'
 
 export class PomodoroTimerConfigStorageService {
   static create() {
@@ -21,7 +22,7 @@ export class PomodoroTimerConfigStorageService {
   async get(): Promise<PomodoroTimerConfig> {
     return this.storage.get('pomodoroTimerConfig').then((result: any) => {
       if (result.pomodoroTimerConfig) {
-        return result.pomodoroTimerConfig
+        return deserializePomodoroTimerConfig(result.pomodoroTimerConfig)
       }
 
       return config.getDefaultPomodoroTimerConfig()
@@ -29,6 +30,8 @@ export class PomodoroTimerConfigStorageService {
   }
 
   async save(pomodoroTimerConfig: PomodoroTimerConfig) {
-    return this.storage.set({ pomodoroTimerConfig })
+    return this.storage.set({
+      pomodoroTimerConfig: serializePomodoroTimerConfig(pomodoroTimerConfig)
+    })
   }
 }
