@@ -38,7 +38,7 @@ async function onClickRemove(domain: string) {
 
 async function updateBrowsingRules(browsingRules: BrowsingRules) {
   await browsingRulesStorageService.save(browsingRules)
-  await port.send({ name: WorkRequestName.TOGGLE_REDIRECT_RULES })
+  await port.send({ name: WorkRequestName.TOGGLE_BROWSING_RULES })
   blockedDomains.value = browsingRules.blockedDomains
 }
 </script>

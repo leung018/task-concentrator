@@ -11,11 +11,16 @@ import { FocusSessionRecordStorageService } from '../domain/pomodoro/record/stor
 import type { TimerConfig } from '../domain/pomodoro/config'
 import { TimerConfigStorageService } from '../domain/pomodoro/config/storage'
 import { FakeServicesContext, ServicesContextProvider } from '../services_context'
+import { WeeklyScheduleStorageService } from '../domain/schedules/storage'
+import { BrowsingRulesStorageService } from '../domain/browsing_rules/storage'
+import { FakeBrowsingControlService } from '../domain/browsing_control'
 
 export async function startBackgroundListener({
   focusSessionRecordHouseKeepDays = 30,
   timerConfig = config.getDefaultTimerConfig(),
-  redirectTogglingService = BrowsingControlTogglingService.createFake(),
+  browsingControlService = new FakeBrowsingControlService(),
+  weeklyScheduleStorageService = WeeklyScheduleStorageService.createFake(),
+  browsingRulesStorageService = BrowsingRulesStorageService.createFake(),
   reminderService = new FakeActionService(),
   badgeDisplayService = new FakeBadgeDisplayService(),
   communicationManager = new FakeCommunicationManager(),
@@ -27,7 +32,9 @@ export async function startBackgroundListener({
 }: {
   focusSessionRecordHouseKeepDays?: number
   timerConfig?: TimerConfig
-  redirectTogglingService?: BrowsingControlTogglingService
+  browsingControlService?: FakeBrowsingControlService
+  weeklyScheduleStorageService?: WeeklyScheduleStorageService
+  browsingRulesStorageService?: BrowsingRulesStorageService
   reminderService?: FakeActionService
   badgeDisplayService?: FakeBadgeDisplayService
   communicationManager?: FakeCommunicationManager
@@ -39,6 +46,9 @@ export async function startBackgroundListener({
 }) {
   const context = new FakeServicesContext()
 
+  context.browsingControlService = browsingControlService
+  context.weeklyScheduleStorageService = weeklyScheduleStorageService
+  context.browsingRulesStorageService = browsingRulesStorageService
   context.communicationManager = communicationManager
   context.reminderService = reminderService
   context.badgeDisplayService = badgeDisplayService
@@ -61,7 +71,11 @@ export async function startBackgroundListener({
   return BackgroundListener.startFake({
     timerFactory,
     focusSessionRecordHouseKeepDays,
-    redirectTogglingService,
+    redirectTogglingService: BrowsingControlTogglingService.createFake({
+      browsingControlService,
+      weeklyScheduleStorageService,
+      browsingRulesStorageService
+    }),
     getCurrentDate
   }).then((listener) => {
     return {

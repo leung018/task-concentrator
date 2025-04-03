@@ -29,7 +29,7 @@ export class BrowsingControlTogglingService {
     })
   }
 
-  private constructor({
+  constructor({
     browsingControlService,
     browsingRulesStorageService,
     weeklyScheduleStorageService

@@ -4,7 +4,6 @@ import BlockedDomainsPage from './BlockedDomainsPage.vue'
 import { BrowsingRulesStorageService } from '../domain/browsing_rules/storage'
 import { flushPromises, mount, VueWrapper } from '@vue/test-utils'
 import { BrowsingRules } from '../domain/browsing_rules'
-import { BrowsingControlTogglingService } from '../domain/browsing_control_toggling'
 import { FakeBrowsingControlService } from '../domain/browsing_control'
 import { startBackgroundListener } from '../test_utils/listener'
 
@@ -115,12 +114,9 @@ async function mountBlockedDomainsPage({
   browsingRulesStorageService = BrowsingRulesStorageService.createFake()
 } = {}) {
   const fakeBrowsingControlService = new FakeBrowsingControlService()
-  const redirectTogglingService = BrowsingControlTogglingService.createFake({
-    browsingRulesStorageService,
-    browsingControlService: fakeBrowsingControlService
-  })
   const { communicationManager } = await startBackgroundListener({
-    redirectTogglingService: redirectTogglingService
+    browsingControlService: fakeBrowsingControlService,
+    browsingRulesStorageService
   })
   const wrapper = mount(BlockedDomainsPage, {
     props: { browsingRulesStorageService, port: communicationManager.clientConnect() }

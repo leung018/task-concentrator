@@ -22,15 +22,13 @@ export class BackgroundListener {
       focusSessionRecordHouseKeepDays: config.getFocusSessionRecordHouseKeepDays(),
       timerFactory: (timerConfig) => {
         return PomodoroTimer.create(timerConfig)
-      },
-      redirectTogglingService: BrowsingControlTogglingService.create()
+      }
     })
   }
 
   static async startFake({
     timerFactory = (timerConfig: TimerConfig) => PomodoroTimer.createFake({ timerConfig }),
     focusSessionRecordHouseKeepDays = 30,
-    redirectTogglingService = BrowsingControlTogglingService.createFake(),
     getCurrentDate = undefined
   }: {
     timerFactory?: (timerConfig: TimerConfig) => PomodoroTimer
@@ -41,7 +39,6 @@ export class BackgroundListener {
     return BackgroundListener._start({
       focusSessionRecordHouseKeepDays,
       timerFactory,
-      redirectTogglingService,
       getCurrentDate
     })
   }
@@ -49,12 +46,10 @@ export class BackgroundListener {
   private static async _start({
     focusSessionRecordHouseKeepDays,
     timerFactory,
-    redirectTogglingService,
     getCurrentDate = () => new Date()
   }: {
     focusSessionRecordHouseKeepDays: number
     timerFactory: (timerConfig: TimerConfig) => PomodoroTimer
-    redirectTogglingService: BrowsingControlTogglingService
     getCurrentDate?: () => Date
   }) {
     const context = ServicesContextProvider.getContext()
@@ -72,7 +67,6 @@ export class BackgroundListener {
     const listener = new BackgroundListener({
       getCurrentDate,
       timer,
-      redirectTogglingService,
       focusSessionRecordHouseKeepDays
     })
 
@@ -81,7 +75,7 @@ export class BackgroundListener {
     return listener
   }
 
-  private redirectTogglingService: BrowsingControlTogglingService
+  private browsingControlTogglingService: BrowsingControlTogglingService
   private communicationManager: CommunicationManager
   readonly timer: PomodoroTimer // TODO: Make it private when removed the dependency on timer in tests of listener
   private reminderService: ActionService
@@ -97,18 +91,20 @@ export class BackgroundListener {
 
   private constructor({
     timer,
-    redirectTogglingService,
     focusSessionRecordHouseKeepDays,
     getCurrentDate
   }: {
     timer: PomodoroTimer
-    redirectTogglingService: BrowsingControlTogglingService
     focusSessionRecordHouseKeepDays: number
     getCurrentDate: () => Date
   }) {
     const context = ServicesContextProvider.getContext()
     this.communicationManager = context.communicationManager
-    this.redirectTogglingService = redirectTogglingService
+    this.browsingControlTogglingService = new BrowsingControlTogglingService({
+      browsingControlService: context.browsingControlService,
+      browsingRulesStorageService: context.browsingRulesStorageService,
+      weeklyScheduleStorageService: context.weeklyScheduleStorageService
+    })
     this.reminderService = context.reminderService
     this.badgeDisplayService = context.badgeDisplayService
     this.timerStateStorageService = context.timerStateStorageService
@@ -176,8 +172,8 @@ export class BackgroundListener {
       (backgroundPort: Port<WorkResponse, WorkRequest>) => {
         const listener = (message: WorkRequest) => {
           switch (message.name) {
-            case WorkRequestName.TOGGLE_REDIRECT_RULES: {
-              this.redirectTogglingService.run()
+            case WorkRequestName.TOGGLE_BROWSING_RULES: {
+              this.browsingControlTogglingService.run()
               break
             }
             case WorkRequestName.START_TIMER: {

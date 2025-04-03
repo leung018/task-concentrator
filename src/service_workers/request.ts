@@ -1,5 +1,5 @@
 export enum WorkRequestName {
-  TOGGLE_REDIRECT_RULES,
+  TOGGLE_BROWSING_RULES,
   START_TIMER,
   LISTEN_TO_TIMER,
   PAUSE_TIMER,
@@ -15,7 +15,7 @@ export type RestartNthPayload = {
 }
 
 export type WorkRequestPayloadMap = {
-  [WorkRequestName.TOGGLE_REDIRECT_RULES]: undefined
+  [WorkRequestName.TOGGLE_BROWSING_RULES]: undefined
   [WorkRequestName.START_TIMER]: undefined
   [WorkRequestName.LISTEN_TO_TIMER]: undefined
   [WorkRequestName.PAUSE_TIMER]: undefined

@@ -9,7 +9,6 @@ import { FakeBrowsingControlService } from '../../domain/browsing_control'
 import { BrowsingRulesStorageService } from '../../domain/browsing_rules/storage'
 import { BrowsingRules } from '../../domain/browsing_rules'
 import { afterEach, beforeEach } from 'node:test'
-import { BrowsingControlTogglingService } from '../../domain/browsing_control_toggling'
 import { startBackgroundListener } from '../../test_utils/listener'
 
 describe('WeeklySchedulesPage', () => {
@@ -270,13 +269,10 @@ async function mountWeeklySchedulesPage({
 } = {}) {
   const fakeBrowsingControlService = new FakeBrowsingControlService()
 
-  const redirectTogglingService = BrowsingControlTogglingService.createFake({
-    browsingRulesStorageService,
-    weeklyScheduleStorageService,
-    browsingControlService: fakeBrowsingControlService
-  })
   const { communicationManager } = await startBackgroundListener({
-    redirectTogglingService
+    browsingControlService: fakeBrowsingControlService,
+    weeklyScheduleStorageService,
+    browsingRulesStorageService
   })
   const wrapper = mount(WeeklySchedulesPage, {
     props: { weeklyScheduleStorageService, port: communicationManager.clientConnect() }
