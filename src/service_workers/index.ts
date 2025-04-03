@@ -18,11 +18,11 @@ function changeStorageKey(oldKey: string, newKey: string) {
 
 // Noted that e2e tests are hard to cover all of the below related to chrome api properly. Better use a bit manual testing if needed.
 
-const redirectTogglingService = BrowsingControlTogglingService.create()
+const browsingControlTogglingService = BrowsingControlTogglingService.create()
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   console.debug('Alarm fired:', alarm)
-  redirectTogglingService.run()
+  browsingControlTogglingService.run()
 })
 chrome.alarms.create({ periodInMinutes: 0.5, when: Date.now() })
 

@@ -33,7 +33,7 @@ export class BackgroundListener {
   }: {
     timerFactory?: (timerConfig: TimerConfig) => PomodoroTimer
     focusSessionRecordHouseKeepDays?: number
-    redirectTogglingService?: BrowsingControlTogglingService
+    browsingControlTogglingService?: BrowsingControlTogglingService
     getCurrentDate?: () => Date
   } = {}) {
     return BackgroundListener._start({

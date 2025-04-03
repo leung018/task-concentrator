@@ -25,17 +25,17 @@ describe('BrowsingControlTogglingService', () => {
 
     const browsingControlService = new FakeBrowsingControlService()
 
-    const redirectTogglingService = BrowsingControlTogglingService.createFake({
+    const browsingControlTogglingService = BrowsingControlTogglingService.createFake({
       browsingRulesStorageService,
       browsingControlService,
       weeklyScheduleStorageService
     })
 
-    await redirectTogglingService.run(new Date('2025-02-03T11:00:00')) // 2025-02-03 is Mon
+    await browsingControlTogglingService.run(new Date('2025-02-03T11:00:00')) // 2025-02-03 is Mon
 
     expect(browsingControlService.getActivatedBrowsingRules()).toEqual(browsingRules)
 
-    await redirectTogglingService.run(new Date('2025-02-03T17:01:00'))
+    await browsingControlTogglingService.run(new Date('2025-02-03T17:01:00'))
     expect(browsingControlService.getActivatedBrowsingRules()).toBeNull()
   })
 
@@ -48,13 +48,13 @@ describe('BrowsingControlTogglingService', () => {
 
     const browsingControlService = new FakeBrowsingControlService()
 
-    const redirectTogglingService = BrowsingControlTogglingService.createFake({
+    const browsingControlTogglingService = BrowsingControlTogglingService.createFake({
       browsingRulesStorageService,
       browsingControlService,
       weeklyScheduleStorageService
     })
 
-    await redirectTogglingService.run()
+    await browsingControlTogglingService.run()
 
     expect(browsingControlService.getActivatedBrowsingRules()).toEqual(browsingRules)
   })

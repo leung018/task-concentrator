@@ -71,7 +71,7 @@ export async function startBackgroundListener({
   return BackgroundListener.startFake({
     timerFactory,
     focusSessionRecordHouseKeepDays,
-    redirectTogglingService: BrowsingControlTogglingService.createFake({
+    browsingControlTogglingService: BrowsingControlTogglingService.createFake({
       browsingControlService,
       weeklyScheduleStorageService,
       browsingRulesStorageService
